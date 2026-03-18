@@ -4,14 +4,15 @@
 
 ## 📖 Overview
 
-**Data Density Heatmap** is a powerful, web-based visualization tool designed to analyze and represent the completeness and distribution of data across an entire GraphQL dataset. 
+**Data Density Heatmap** is a powerful, web-based visualization tool designed to analyze and represent the completeness and distribution of data across an entire GraphQL dataset.
 
 When working with large, complex datasets, it is often difficult to know which fields are consistently populated and which are frequently left blank. This application solves that problem by calculating the "data density" (the percentage of non-null, non-empty values) for every field across selected GraphQL node types. It then visualizes this data using an interactive heatmap, enabling developers, researchers, and data managers to quickly identify areas with high or low data availability.
 
 ## 🎯 The Problem It Solves
 
-In modern applications, GraphQL schemas can grow incredibly large. While the schema defines *what* data can exist, it doesn't tell you *how much* data actually exists. 
-- Are users actually filling out their `bio` field? 
+In modern applications, GraphQL schemas can grow incredibly large. While the schema defines _what_ data can exist, it doesn't tell you _how much_ data actually exists.
+
+- Are users actually filling out their `bio` field?
 - Is the `updatedAt` timestamp consistently applied across all records?
 - Which optional fields are practically unused?
 
@@ -22,18 +23,21 @@ In modern applications, GraphQL schemas can grow incredibly large. While the sch
 The application operates in a seamless, three-step pipeline:
 
 ### 1. Connection & Introspection
+
 - The user provides a **GraphQL Endpoint URL** and any necessary authentication headers (e.g., `Authorization: Bearer <token>`).
 - The app sends a standard GraphQL Introspection Query to the endpoint.
 - It parses the returned schema, extracting all available `Object Types` and their respective `Fields`.
 
 ### 2. Data Sampling & Calculation
+
 - The user selects which specific GraphQL types they want to analyze.
 - The app dynamically constructs GraphQL queries to fetch a configurable sample size (e.g., 50, 100, 500, or 1000 records) for each selected type.
-- Once the sample data is retrieved, the app calculates the **Density Score** for every field. 
-  - *Formula:* `(Number of non-null/non-empty values / Total sampled records) * 100`
+- Once the sample data is retrieved, the app calculates the **Density Score** for every field.
+  - _Formula:_ `(Number of non-null/non-empty values / Total sampled records) * 100`
 - It also calculates an **Overall Quality Score**, representing the average density across all selected fields.
 
 ### 3. Visualization & Interaction
+
 - The calculated density data is fed into the visualization engine.
 - **Heatmap View (D3.js):** Renders a matrix where rows are GraphQL Types and columns are Fields. The color intensity of each cell represents the density (e.g., Red = 0%, Yellow = 50%, Green = 100%).
 - **Alternative Views (Recharts):** Users can toggle to a Bar Chart (ranking fields by density) or a Treemap (showing hierarchical density).
@@ -59,7 +63,7 @@ The application operates in a seamless, three-step pipeline:
 - **State Management:** Zustand (with persistence)
 - **Styling:** Tailwind CSS & shadcn/ui components
 - **Icons:** Lucide React
-- **Visualizations:** 
+- **Visualizations:**
   - D3.js (for the complex, zoomable Heatmap matrix)
   - Recharts (for Bar Charts, Treemaps, and Distribution Pie Charts)
 - **Export Utilities:** `html-to-image` (DOM to PNG/Canvas) and `jspdf` (PDF generation)
@@ -72,4 +76,5 @@ The application operates in a seamless, three-step pipeline:
 4. **Settings:** Click the Settings gear in the sidebar to adjust sample sizes, theme, and heatmap colors.
 
 ---
-*Built with precision to make data quality analysis effortless and visually intuitive.*
+
+_Built with precision to make data quality analysis effortless and visually intuitive._

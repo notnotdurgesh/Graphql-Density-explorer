@@ -1,8 +1,65 @@
 import { GraphQLClient, gql, ClientError } from 'graphql-request';
-import { 
-  GraphQLType, GraphQLField, GraphQLEnumType, GraphQLInterfaceType, 
-  GraphQLUnionType, GraphQLInputType, GraphQLDirective, SchemaStats 
+import {
+  GraphQLType,
+  GraphQLField,
+  GraphQLEnumType,
+  GraphQLInterfaceType,
+  GraphQLUnionType,
+  GraphQLInputType,
+  GraphQLDirective,
+  SchemaStats,
 } from '../stores/useAppStore';
+
+interface IntrospectionType {
+  kind: string;
+  name: string;
+  description?: string;
+  fields?: {
+    name: string;
+    description?: string;
+    isDeprecated?: boolean;
+    deprecationReason?: string;
+    args?: {
+      name: string;
+      description?: string;
+      defaultValue?: string;
+      type: GraphQLTypeFragment;
+    }[];
+    type: GraphQLTypeFragment;
+  }[];
+  inputFields?: {
+    name: string;
+    description?: string;
+    defaultValue?: string;
+    type: GraphQLTypeFragment;
+  }[];
+  interfaces?: { name: string }[];
+  enumValues?: {
+    name: string;
+    description?: string;
+    isDeprecated?: boolean;
+    deprecationReason?: string;
+  }[];
+  possibleTypes?: { name: string }[];
+}
+
+interface IntrospectionSchema {
+  queryType: { name: string };
+  mutationType?: { name: string } | null;
+  subscriptionType?: { name: string } | null;
+  types: IntrospectionType[];
+  directives: {
+    name: string;
+    description?: string;
+    locations: string[];
+    args: {
+      name: string;
+      description?: string;
+      defaultValue?: string;
+      type: GraphQLTypeFragment;
+    }[];
+  }[];
+}
 
 // Fallback queries for endpoints with strict query depth limits
 const INTROSPECTION_QUERIES = [
@@ -10,32 +67,120 @@ const INTROSPECTION_QUERIES = [
   gql`
     query IntrospectionDeep {
       __schema {
-        queryType { name }
-        mutationType { name }
-        subscriptionType { name }
+        queryType {
+          name
+        }
+        mutationType {
+          name
+        }
+        subscriptionType {
+          name
+        }
         types {
-          name description kind
+          name
+          description
+          kind
           fields(includeDeprecated: true) {
-            name description isDeprecated deprecationReason
+            name
+            description
+            isDeprecated
+            deprecationReason
             args {
-              name description defaultValue
-              type { kind name ofType { kind name ofType { kind name ofType { kind name } } } }
+              name
+              description
+              defaultValue
+              type {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                    ofType {
+                      kind
+                      name
+                    }
+                  }
+                }
+              }
             }
-            type { kind name ofType { kind name ofType { kind name ofType { kind name ofType { kind name } } } } }
+            type {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                    ofType {
+                      kind
+                      name
+                    }
+                  }
+                }
+              }
+            }
           }
           inputFields {
-            name description defaultValue
-            type { kind name ofType { kind name ofType { kind name ofType { kind name } } } }
+            name
+            description
+            defaultValue
+            type {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
+              }
+            }
           }
-          interfaces { name }
-          enumValues(includeDeprecated: true) { name description isDeprecated deprecationReason }
-          possibleTypes { name }
+          interfaces {
+            name
+          }
+          enumValues(includeDeprecated: true) {
+            name
+            description
+            isDeprecated
+            deprecationReason
+          }
+          possibleTypes {
+            name
+          }
         }
         directives {
-          name description locations
+          name
+          description
+          locations
           args {
-            name description defaultValue
-            type { kind name ofType { kind name ofType { kind name } } }
+            name
+            description
+            defaultValue
+            type {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                }
+              }
+            }
           }
         }
       }
@@ -45,20 +190,85 @@ const INTROSPECTION_QUERIES = [
   gql`
     query IntrospectionMedium {
       __schema {
-        queryType { name }
-        mutationType { name }
-        subscriptionType { name }
+        queryType {
+          name
+        }
+        mutationType {
+          name
+        }
+        subscriptionType {
+          name
+        }
         types {
-          name description kind
+          name
+          description
+          kind
           fields(includeDeprecated: true) {
-            name description isDeprecated deprecationReason
-            args { name description type { kind name ofType { kind name ofType { kind name } } } }
-            type { kind name ofType { kind name ofType { kind name ofType { kind name } } } }
+            name
+            description
+            isDeprecated
+            deprecationReason
+            args {
+              name
+              description
+              type {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
+              }
+            }
+            type {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
+              }
+            }
           }
-          inputFields { name description type { kind name ofType { kind name ofType { kind name } } } }
-          interfaces { name }
-          enumValues(includeDeprecated: true) { name description isDeprecated deprecationReason }
-          possibleTypes { name }
+          inputFields {
+            name
+            description
+            type {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                }
+              }
+            }
+          }
+          interfaces {
+            name
+          }
+          enumValues(includeDeprecated: true) {
+            name
+            description
+            isDeprecated
+            deprecationReason
+          }
+          possibleTypes {
+            name
+          }
         }
       }
     }
@@ -67,20 +277,55 @@ const INTROSPECTION_QUERIES = [
   gql`
     query IntrospectionShallow {
       __schema {
-        queryType { name }
-        mutationType { name }
-        subscriptionType { name }
+        queryType {
+          name
+        }
+        mutationType {
+          name
+        }
+        subscriptionType {
+          name
+        }
         types {
-          name description kind
+          name
+          description
+          kind
           fields {
-            name description
-            args { name type { kind name } }
-            type { kind name ofType { kind name } }
+            name
+            description
+            args {
+              name
+              type {
+                kind
+                name
+              }
+            }
+            type {
+              kind
+              name
+              ofType {
+                kind
+                name
+              }
+            }
           }
-          inputFields { name type { kind name } }
-          interfaces { name }
-          enumValues { name description }
-          possibleTypes { name }
+          inputFields {
+            name
+            type {
+              kind
+              name
+            }
+          }
+          interfaces {
+            name
+          }
+          enumValues {
+            name
+            description
+          }
+          possibleTypes {
+            name
+          }
         }
       }
     }
@@ -89,38 +334,81 @@ const INTROSPECTION_QUERIES = [
   gql`
     query IntrospectionMinimal {
       __schema {
-        queryType { name }
-        mutationType { name }
-        subscriptionType { name }
+        queryType {
+          name
+        }
+        mutationType {
+          name
+        }
+        subscriptionType {
+          name
+        }
         types {
-          name description kind
+          name
+          description
+          kind
           fields {
-            name description
-            args { name }
-            type { kind name }
+            name
+            description
+            args {
+              name
+            }
+            type {
+              kind
+              name
+            }
           }
-          inputFields { name }
-          interfaces { name }
-          enumValues { name description }
-          possibleTypes { name }
+          inputFields {
+            name
+          }
+          interfaces {
+            name
+          }
+          enumValues {
+            name
+            description
+          }
+          possibleTypes {
+            name
+          }
         }
       }
     }
-  `
+  `,
 ];
 
-function unwrapType(type: any): { name: string; isList: boolean; isRequired: boolean; kind: string } {
-  let isRequired = type?.kind === 'NON_NULL';
+interface GraphQLTypeFragment {
+  kind: string;
+  name?: string;
+  ofType?: GraphQLTypeFragment;
+}
+
+function unwrapType(type: GraphQLTypeFragment): {
+  name: string;
+  isList: boolean;
+  isRequired: boolean;
+  kind: string;
+} {
+  let isRequired = false;
   let isList = false;
-  let currentType = type;
+  let currentType: GraphQLTypeFragment | undefined = type;
+
+  // Track if the outermost wrapper is NON_NULL
+  if (currentType?.kind === 'NON_NULL') {
+    isRequired = true;
+  }
 
   let depth = 0;
-  while (currentType && (currentType.kind === 'NON_NULL' || currentType.kind === 'LIST') && depth < 10) {
+  while (
+    currentType &&
+    (currentType.kind === 'NON_NULL' || currentType.kind === 'LIST') &&
+    depth < 10
+  ) {
     if (currentType.kind === 'LIST') isList = true;
     if (currentType.ofType) {
       currentType = currentType.ofType;
     } else {
-      break; // Run out of depth in shallow query
+      break;
     }
     depth++;
   }
@@ -133,7 +421,7 @@ function unwrapType(type: any): { name: string; isList: boolean; isRequired: boo
   };
 }
 
-function unwrapTypeName(type: any): string {
+function unwrapTypeName(type: GraphQLTypeFragment | null | undefined): string {
   if (!type) return 'Unknown';
   if (type.kind === 'NON_NULL') return `${unwrapTypeName(type.ofType)}!`;
   if (type.kind === 'LIST') return `[${unwrapTypeName(type.ofType)}]`;
@@ -150,42 +438,58 @@ export interface FullIntrospectionResult {
   stats: SchemaStats;
 }
 
-export async function introspectFullSchema(endpoint: string, headers: Record<string, string>): Promise<FullIntrospectionResult> {
+export async function introspectFullSchema(
+  endpoint: string,
+  headers: Record<string, string>
+): Promise<FullIntrospectionResult> {
   const client = new GraphQLClient(endpoint, { headers });
-  let data: any = null;
-  let lastError: any = null;
+  let data: { __schema: IntrospectionSchema } | null = null;
+  let lastError: Error | ClientError | null = null;
 
   for (let i = 0; i < INTROSPECTION_QUERIES.length; i++) {
     try {
-      data = await client.request(INTROSPECTION_QUERIES[i]);
+      data = await client.request<{ __schema: IntrospectionSchema }>(INTROSPECTION_QUERIES[i]);
       break; // Success!
-    } catch (err: any) {
-      console.warn(`Introspection Level ${i + 1} failed:`, err.message);
-      lastError = err;
-      // Continue to try the shallower query
+    } catch (err) {
+      const error = err as Error;
+      console.warn(`Introspection Level ${i + 1} failed:`, error.message);
+      lastError = error;
     }
   }
 
   if (!data) {
-    throw new Error(lastError?.response?.errors?.[0]?.message || lastError?.message || 'Failed to introspect schema (all fallbacks failed)');
+    const errorMessage =
+      lastError instanceof ClientError
+        ? lastError.response?.errors?.[0]?.message
+        : (lastError as Error)?.message;
+
+    throw new Error(errorMessage || 'Failed to introspect schema (all fallbacks failed)');
   }
 
-  const allTypes = data.__schema.types.filter((t: any) => !t.name.startsWith('__'));
+  const allTypes = (data.__schema.types as IntrospectionType[]).filter(
+    (t: IntrospectionType) => !t.name.startsWith('__')
+  );
   const queryTypeName = data.__schema.queryType?.name || 'Query';
   const mutationTypeName = data.__schema.mutationType?.name || null;
+  const subscriptionTypeName = data.__schema.subscriptionType?.name || null;
 
-  // Object types (excluding root Query, Mutation, Subscription)
-  const rootTypeNames = new Set([queryTypeName, mutationTypeName, data.__schema.subscriptionType?.name].filter(Boolean));
-  
+  const rootTypeNames = new Set(
+    [queryTypeName, mutationTypeName, subscriptionTypeName].filter(Boolean)
+  );
+
   const objectTypes: GraphQLType[] = allTypes
-    .filter((t: any) => t.kind === 'OBJECT' && !rootTypeNames.has(t.name))
-    .map((t: any) => {
+    .filter((t: IntrospectionType) => t.kind === 'OBJECT' && !rootTypeNames.has(t.name))
+    .map((t: IntrospectionType) => {
       const fields: GraphQLField[] = (t.fields || [])
-        .filter((f: any) => {
-          const hasRequiredArgs = f.args?.some((arg: any) => arg.type?.kind === 'NON_NULL' && !arg.defaultValue);
+        .filter((f) => {
+          // Skip fields that require non-nullable arguments without default values (hard to guess)
+          const hasRequiredArgs = f.args?.some((arg) => {
+            const unwrappedArg = unwrapType(arg.type);
+            return unwrappedArg.isRequired && !arg.defaultValue;
+          });
           return !hasRequiredArgs;
         })
-        .map((f: any) => {
+        .map((f) => {
           const unwrapped = unwrapType(f.type);
           return {
             name: f.name,
@@ -202,11 +506,11 @@ export async function introspectFullSchema(endpoint: string, headers: Record<str
 
   // Enum types
   const enums: GraphQLEnumType[] = allTypes
-    .filter((t: any) => t.kind === 'ENUM')
-    .map((t: any) => ({
+    .filter((t: IntrospectionType) => t.kind === 'ENUM')
+    .map((t: IntrospectionType) => ({
       name: t.name,
       description: t.description,
-      values: (t.enumValues || []).map((v: any) => ({
+      values: (t.enumValues || []).map((v) => ({
         name: v.name,
         description: v.description,
         isDeprecated: v.isDeprecated,
@@ -216,11 +520,11 @@ export async function introspectFullSchema(endpoint: string, headers: Record<str
 
   // Interface types
   const interfaces: GraphQLInterfaceType[] = allTypes
-    .filter((t: any) => t.kind === 'INTERFACE')
-    .map((t: any) => ({
+    .filter((t: IntrospectionType) => t.kind === 'INTERFACE')
+    .map((t: IntrospectionType) => ({
       name: t.name,
       description: t.description,
-      fields: (t.fields || []).map((f: any) => {
+      fields: (t.fields || []).map((f) => {
         const unwrapped = unwrapType(f.type);
         return {
           name: f.name,
@@ -231,25 +535,25 @@ export async function introspectFullSchema(endpoint: string, headers: Record<str
           kind: unwrapped.kind,
         };
       }),
-      possibleTypes: (t.possibleTypes || []).map((p: any) => p.name),
+      possibleTypes: (t.possibleTypes || []).map((p) => p.name),
     }));
 
   // Union types
   const unions: GraphQLUnionType[] = allTypes
-    .filter((t: any) => t.kind === 'UNION')
-    .map((t: any) => ({
+    .filter((t: IntrospectionType) => t.kind === 'UNION')
+    .map((t: IntrospectionType) => ({
       name: t.name,
       description: t.description,
-      possibleTypes: (t.possibleTypes || []).map((p: any) => p.name),
+      possibleTypes: (t.possibleTypes || []).map((p) => p.name),
     }));
 
   // Input types
   const inputTypes: GraphQLInputType[] = allTypes
-    .filter((t: any) => t.kind === 'INPUT_OBJECT')
-    .map((t: any) => ({
+    .filter((t: IntrospectionType) => t.kind === 'INPUT_OBJECT')
+    .map((t: IntrospectionType) => ({
       name: t.name,
       description: t.description,
-      fields: (t.inputFields || []).map((f: any) => {
+      fields: (t.inputFields || []).map((f) => {
         const unwrapped = unwrapType(f.type);
         return {
           name: f.name,
@@ -263,11 +567,11 @@ export async function introspectFullSchema(endpoint: string, headers: Record<str
     }));
 
   // Directives
-  const directives: GraphQLDirective[] = (data.__schema.directives || []).map((d: any) => ({
+  const directives: GraphQLDirective[] = (data.__schema.directives || []).map((d) => ({
     name: d.name,
     description: d.description,
     locations: d.locations,
-    args: (d.args || []).map((a: any) => ({
+    args: (d.args || []).map((a) => ({
       name: a.name,
       type: unwrapTypeName(a.type),
       description: a.description,
@@ -276,11 +580,13 @@ export async function introspectFullSchema(endpoint: string, headers: Record<str
   }));
 
   // Query/Mutation root fields
-  const queryRoot = allTypes.find((t: any) => t.name === queryTypeName);
-  const mutationRoot = mutationTypeName ? allTypes.find((t: any) => t.name === mutationTypeName) : null;
+  const queryRoot = allTypes.find((t: IntrospectionType) => t.name === queryTypeName);
+  const mutationRoot = mutationTypeName
+    ? allTypes.find((t: IntrospectionType) => t.name === mutationTypeName)
+    : null;
 
   let totalFields = 0;
-  objectTypes.forEach(t => totalFields += t.fields.length);
+  objectTypes.forEach((t) => (totalFields += t.fields.length));
 
   const stats: SchemaStats = {
     objectTypeCount: objectTypes.length,
@@ -290,15 +596,18 @@ export async function introspectFullSchema(endpoint: string, headers: Record<str
     inputTypeCount: inputTypes.length,
     directiveCount: directives.length,
     totalFields,
-    queryFields: (queryRoot?.fields || []).map((f: any) => f.name),
-    mutationFields: (mutationRoot?.fields || []).map((f: any) => f.name),
+    queryFields: (queryRoot?.fields || []).map((f) => f.name),
+    mutationFields: (mutationRoot?.fields || []).map((f) => f.name),
   };
 
   return { objectTypes, enums, interfaces, unions, inputTypes, directives, stats };
 }
 
 // Keep for backward compat
-export async function introspectSchema(endpoint: string, headers: Record<string, string>): Promise<GraphQLType[]> {
+export async function introspectSchema(
+  endpoint: string,
+  headers: Record<string, string>
+): Promise<GraphQLType[]> {
   const result = await introspectFullSchema(endpoint, headers);
   return result.objectTypes;
 }
@@ -307,19 +616,37 @@ export async function fetchSampleData(
   endpoint: string,
   headers: Record<string, string>,
   type: GraphQLType,
-  limit: number = 200
-): Promise<any[]> {
+  limit: number = 200,
+  onProgress?: (message: string) => void
+): Promise<Record<string, unknown>[]> {
   const client = new GraphQLClient(endpoint, { headers });
-  
-  const queryRootData: any = await client.request(gql`
-    query {
-      __type(name: "Query") {
-        fields {
+
+  // 1. Get root query type name dynamically
+  onProgress?.('Initializing discovery mechanism...');
+  const introspectionData = await client.request<{ __schema: { queryType: { name: string } } }>(gql`
+    query GetRootQueryName {
+      __schema {
+        queryType {
           name
-          type {
-            kind
+        }
+      }
+    }
+  `);
+
+  const queryTypeName = introspectionData?.__schema?.queryType?.name || 'Query';
+
+  // 2. Get fields of the root query type
+  onProgress?.(`Probing Query root: ${queryTypeName}`);
+  const queryRootData = await client.request<{ __type: { fields: any[] } }>(
+    gql`
+      query GetQueryFields($name: String!) {
+        __type(name: $name) {
+          fields {
             name
-            ofType {
+            args {
+              name
+            }
+            type {
               kind
               name
               ofType {
@@ -328,108 +655,165 @@ export async function fetchSampleData(
                 ofType {
                   kind
                   name
+                  ofType {
+                    kind
+                    name
+                    ofType {
+                      kind
+                      name
+                    }
+                  }
                 }
               }
             }
           }
         }
       }
-    }
-  `);
+    `,
+    { name: queryTypeName }
+  );
 
-  const queryFields = queryRootData.__type.fields;
-  
-  // Find a field returning list of this type, or connection
-  const targetField = queryFields.find((f: any) => {
+  const queryFields = queryRootData?.__type?.fields || [];
+
+  // 3. Find a field returning list of this type, or connection
+  // Rank potential fields based on name similarity and return type
+  // 3. Find the best path to this type using BFS from the root Query
+  const typePaths: {
+    field: any;
+    path: string[];
+    score: number;
+    isConnection: boolean;
+  }[] = [];
+
+  // Simple BFS to find paths from root Query fields to the target type
+  // We limit depth to 2 to keep queries reasonable (Root -> Type or Root -> Connection -> Type)
+  for (const f of queryFields) {
     const unwrapped = unwrapType(f.type);
-    if (unwrapped.name === type.name && unwrapped.isList) return true;
-    if (unwrapped.name === `${type.name}Connection`) return true;
-    return false;
-  });
 
-  if (!targetField) {
-    throw new Error(`Could not find a query field returning a list of ${type.name}`);
-  }
-
-  let fieldSelections = type.fields.map(f => {
-    if (f.kind === 'OBJECT' || f.kind === 'INTERFACE' || f.kind === 'UNION') {
-      return `${f.name} { __typename }`;
-    }
-    return f.name;
-  }).join('\n');
-
-  if (!fieldSelections.trim()) {
-    fieldSelections = '__typename';
-  }
-
-  const unwrappedTarget = unwrapType(targetField.type);
-  
-  let queryStr = '';
-  if (unwrappedTarget.name === `${type.name}Connection`) {
-    queryStr = `
-      query Get${type.name}Sample {
-        ${targetField.name}(first: ${limit}) {
-          edges {
-            node {
-              ${fieldSelections}
-            }
-          }
-        }
-      }
-    `;
-  } else {
-    queryStr = `
-      query Get${type.name}Sample {
-        ${targetField.name}(first: ${limit}) {
-          ${fieldSelections}
-        }
-      }
-    `;
-  }
-
-  try {
-    const data: any = await client.request(queryStr);
-    let result = data[targetField.name];
-    
-    if (result && result.edges) {
-      result = result.edges.map((e: any) => e.node);
-    } else if (result && result.nodes) {
-      result = result.nodes;
-    } else if (result && result.items) {
-      result = result.items;
-    }
-    
-    return Array.isArray(result) ? result : [];
-  } catch (err: any) {
-    if (err instanceof ClientError && err.response?.data && err.response.data[targetField.name]) {
-      let result = err.response.data[targetField.name];
-      if (result && result.edges) result = result.edges.map((e: any) => e?.node).filter(Boolean);
-      else if (result && result.nodes) result = result.nodes.filter(Boolean);
-      else if (result && result.items) result = result.items.filter(Boolean);
-      
-      if (Array.isArray(result) && result.length > 0) {
-        return result;
-      }
+    // Direct match (List or Single)
+    if (unwrapped.name === type.name) {
+      typePaths.push({
+        field: f,
+        path: [f.name],
+        score: unwrapped.isList ? 100 : 80,
+        isConnection: false,
+      });
+      continue;
     }
 
-    // Fallback without arguments
-    let fallbackQueryStr = '';
-    if (unwrappedTarget.name === `${type.name}Connection`) {
-      fallbackQueryStr = `
-        query Get${type.name}SampleFallback {
-          ${targetField.name} {
-            edges {
-              node {
-                ${fieldSelections}
+    // Check if it's a Connection
+    if (
+      unwrapped.name.endsWith('Connection') ||
+      unwrapped.name.endsWith('Response') ||
+      unwrapped.name.endsWith('Result')
+    ) {
+      // Introspect this wrapper type to see if it has 'nodes', 'edges', or 'items' of the target type
+      try {
+        const wrapperTypeData: any = await client.request(
+          gql`
+            query GetWrapperFields($name: String!) {
+              __type(name: $name) {
+                fields {
+                  name
+                  type {
+                    kind
+                    name
+                    ofType {
+                      kind
+                      name
+                    }
+                  }
+                }
               }
             }
+          `,
+          { name: unwrapped.name }
+        );
+
+        const wrapperFields = wrapperTypeData?.__type?.fields || [];
+        for (const wf of wrapperFields) {
+          const wUnwrapped = unwrapType(wf.type);
+          if (wUnwrapped.name === type.name) {
+            typePaths.push({
+              field: f,
+              path: [f.name, wf.name],
+              score: 95,
+              isConnection: ['edges', 'nodes', 'items'].includes(wf.name),
+            });
+          }
+        }
+      } catch {
+        // Skip wrapper if introspection fails
+      }
+    }
+
+    // Name-based fuzzy match as fallback
+    if (f.name.toLowerCase().includes(type.name.toLowerCase())) {
+      typePaths.push({
+        field: f,
+        path: [f.name],
+        score: 40,
+        isConnection: false,
+      });
+    }
+  }
+
+  const bestPaths = typePaths.sort((a, b) => b.score - a.score);
+
+  if (bestPaths.length === 0) {
+    throw new Error(
+      `Industry-level discovery failed: No path found from Query root to ${type.name}.`
+    );
+  }
+
+  // 4. Try the best potential paths
+  for (const match of bestPaths) {
+    const targetField = match.field;
+    const isConnection = match.isConnection;
+    const path = match.path;
+
+    // Choose the best argument name for limit
+    const args = targetField.args || [];
+    const limitArg =
+      args.find((a: any) => ['first', 'limit', 'size', 'count'].includes(a.name.toLowerCase()))
+        ?.name || 'first';
+
+    const fieldSelections = type.fields
+      .map((f) => {
+        // Don't nest too deep to avoid depth limits, but get basic info
+        if (f.kind === 'OBJECT' || f.kind === 'INTERFACE' || f.kind === 'UNION') {
+          return `${f.name} { __typename }`;
+        }
+        return f.name;
+      })
+      .join('\n');
+
+    let queryStr = '';
+    if (path.length === 2) {
+      // Nested path (e.g., characters -> results -> fields)
+      queryStr = `
+            query Get${type.name}Sample {
+                ${path[0]}(${limitArg}: ${limit}) {
+                    ${path[1]} {
+                        ${fieldSelections}
+                    }
+                }
+            }
+        `;
+    } else if (isConnection) {
+      queryStr = `
+        query Get${type.name}Sample {
+          ${targetField.name}(${limitArg}: ${limit}) {
+            edges { node { ${fieldSelections} } }
+            nodes { ${fieldSelections} }
+            items { ${fieldSelections} }
           }
         }
       `;
     } else {
-      fallbackQueryStr = `
-        query Get${type.name}SampleFallback {
-          ${targetField.name} {
+      queryStr = `
+        query Get${type.name}Sample {
+          ${targetField.name}(${limitArg}: ${limit}) {
             ${fieldSelections}
           }
         }
@@ -437,63 +821,95 @@ export async function fetchSampleData(
     }
 
     try {
-      const fallbackData: any = await client.request(fallbackQueryStr);
-      let result = fallbackData[targetField.name];
-      if (result && result.edges) result = result.edges.map((e: any) => e.node);
-      else if (result && result.nodes) result = result.nodes;
-      else if (result && result.items) result = result.items;
-      
-      return Array.isArray(result) ? result.slice(0, limit) : [];
-    } catch (fallbackErr: any) {
-      if (fallbackErr instanceof ClientError && fallbackErr.response?.data && fallbackErr.response.data[targetField.name]) {
-        let result = fallbackErr.response.data[targetField.name];
-        if (result && result.edges) result = result.edges.map((e: any) => e?.node).filter(Boolean);
-        else if (result && result.nodes) result = result.nodes.filter(Boolean);
-        else if (result && result.items) result = result.items.filter(Boolean);
-        
-        if (Array.isArray(result) && result.length > 0) {
-          return result.slice(0, limit);
-        }
+      onProgress?.(`Executing discovery query via: ${path.join(' -> ')}`);
+      const data = await client.request<Record<string, any>>(queryStr);
+      const result = data[targetField.name];
+
+      if (!result) continue;
+
+      // Unpack based on path
+      let items = result;
+      if (path.length === 2) {
+        items = result[path[1]];
       }
 
-      console.error(`Failed to fetch sample data for ${type.name}:`, fallbackErr);
-      return [];
+      const count = Array.isArray(items)
+        ? items.length
+        : items?.nodes?.length || items?.edges?.length || 0;
+      onProgress?.(`Successfully fetched ${count} samples for ${type.name}`);
+
+      if (Array.isArray(items)) return items;
+      if (items?.edges)
+        return items.edges.map((e: { node: Record<string, unknown> }) => e?.node).filter(Boolean);
+      if (items?.nodes) return items.nodes.filter(Boolean);
+      if (items?.items) return items.items.filter(Boolean);
+
+      // If we got something but it's not a list, it might be a singleton or weird wrapper
+      if (typeof result === 'object' && result !== null) {
+        // Look for any array property
+        const arrays = Object.values(result).filter((v) => Array.isArray(v));
+        if (arrays.length > 0) return (arrays[0] as Record<string, unknown>[]).slice(0, limit);
+      }
+    } catch (err) {
+      console.warn(`Attempt with field ${targetField.name} failed:`, err);
+      // Try fallback without arguments
+      try {
+        const fallbackQuery = `query { ${targetField.name} { ${isConnection ? 'nodes { ' + fieldSelections + ' } edges { node { ' + fieldSelections + ' } }' : fieldSelections} } }`;
+        const fallbackData = await client.request<Record<string, any>>(fallbackQuery);
+        const fbResult = fallbackData[targetField.name];
+        if (Array.isArray(fbResult)) return fbResult.slice(0, limit);
+        if (fbResult?.nodes) return fbResult.nodes.slice(0, limit);
+        if (fbResult?.edges)
+          return fbResult.edges
+            .map((e: { node: Record<string, unknown> }) => e.node)
+            .slice(0, limit);
+      } catch {
+        continue; // Try next field
+      }
     }
   }
+
+  throw new Error(
+    `Failed to fetch sample data for ${type.name} after trying all potential fields.`
+  );
 }
 
 export async function executeQuery(
   endpoint: string,
   headers: Record<string, string>,
   query: string,
-  variables?: Record<string, any>
-): Promise<{ data: any; errors?: any[] }> {
+  variables?: Record<string, unknown>
+): Promise<{ data: Record<string, unknown> | null; errors?: Record<string, unknown>[] }> {
   const client = new GraphQLClient(endpoint, { headers });
   try {
-    const data = await client.request(query, variables || {});
+    const data = await client.request<Record<string, unknown>>(query, variables || {});
     return { data };
-  } catch (err: any) {
+  } catch (err) {
     if (err instanceof ClientError) {
-      return { 
-        data: err.response?.data || null, 
-        errors: err.response?.errors || [{ message: err.message }] 
+      return {
+        data: (err.response?.data as Record<string, unknown>) || null,
+        errors: (err.response?.errors as unknown as Record<string, unknown>[] | undefined) || [
+          { message: err.message },
+        ],
       };
     }
-    return { data: null, errors: [{ message: err.message }] };
+    return { data: null, errors: [{ message: (err as Error).message }] };
   }
 }
 
 export function generateQueryForType(type: GraphQLType, limit: number = 10): string {
-  const fieldSelections = type.fields.map(f => {
-    if (f.kind === 'OBJECT' || f.kind === 'INTERFACE' || f.kind === 'UNION') {
-      return `  ${f.name} {\n    __typename\n  }`;
-    }
-    return `  ${f.name}`;
-  }).join('\n');
+  const fieldSelections = type.fields
+    .map((f) => {
+      if (f.kind === 'OBJECT' || f.kind === 'INTERFACE' || f.kind === 'UNION') {
+        return `  ${f.name} {\n    __typename\n  }`;
+      }
+      return `  ${f.name}`;
+    })
+    .join('\n');
 
   // Convert type name to camelCase for query field guess
   const queryFieldName = type.name.charAt(0).toLowerCase() + type.name.slice(1) + 's';
-  
+
   return `query Get${type.name}s {
   ${queryFieldName}(first: ${limit}) {
 ${fieldSelections}
@@ -501,28 +917,43 @@ ${fieldSelections}
 }`;
 }
 
-export function calculateDensity(data: any[], fields: GraphQLField[]): Record<string, number> {
+export function calculateDensity(
+  data: Record<string, unknown>[],
+  fields: GraphQLField[]
+): Record<string, number> {
   const density: Record<string, number> = {};
   const total = data.length;
 
   if (total === 0) {
-    fields.forEach(f => density[f.name] = 0);
+    fields.forEach((f) => (density[f.name] = 0));
     return density;
   }
 
-  fields.forEach(f => {
+  fields.forEach((f) => {
     let validCount = 0;
-    data.forEach(item => {
+    data.forEach((item) => {
       const val = item[f.name];
       let isValid = false;
 
-      if (val !== null && val !== undefined && val !== '') {
+      // Rule: null and undefined are never valid
+      if (val !== null && val !== undefined) {
         if (Array.isArray(val)) {
-          isValid = val.length > 0 && val.some(v => v !== null && v !== undefined && v !== '');
-        } else if (typeof val === 'object') {
-          if (Object.keys(val).length > 0 || val instanceof Date) {
-            isValid = true;
-          }
+          // Rule: empty arrays are treated as missing data (density lowering)
+          // UNLESS the field is an object type where we just checked __typename
+          isValid = val.length > 0 && val.some((v) => v !== null && v !== undefined && v !== '');
+        } else if (typeof val === 'object' && !(val instanceof Date)) {
+          // Rule: For objects, if we only requested __typename, check if it's there
+          // Otherwise check if it has any keys
+          isValid = Object.keys(val).length > 0;
+        } else if (typeof val === 'string') {
+          // Rule: Empty strings are invalid/missing
+          isValid = val.trim().length > 0;
+        } else if (typeof val === 'number') {
+          // Rule: 0 is valid, but NaN and Infinity might be results of errors
+          isValid = !isNaN(val) && isFinite(val);
+        } else if (typeof val === 'boolean') {
+          // Rule: false is a valid boolean value
+          isValid = true;
         } else {
           isValid = true;
         }
@@ -538,7 +969,10 @@ export function calculateDensity(data: any[], fields: GraphQLField[]): Record<st
   return density;
 }
 
-export function analyzeNullPatterns(data: any[], fieldName: string): {
+export function analyzeNullPatterns(
+  data: Record<string, unknown>[],
+  fieldName: string
+): {
   totalRecords: number;
   nullCount: number;
   nonNullCount: number;
@@ -558,7 +992,10 @@ export function analyzeNullPatterns(data: any[], fieldName: string): {
 
   data.forEach((item, idx) => {
     const val = item[fieldName];
-    const isNull = val === null || val === undefined || val === '' || 
+    const isNull =
+      val === null ||
+      val === undefined ||
+      val === '' ||
       (Array.isArray(val) && val.length === 0) ||
       (typeof val === 'object' && val !== null && Object.keys(val).length === 0);
 
@@ -578,7 +1015,8 @@ export function analyzeNullPatterns(data: any[], fieldName: string): {
 
   const nonNullCount = total - nullCount;
 
-  let pattern: 'random' | 'clustered' | 'trailing' | 'leading' | 'all_null' | 'all_filled' = 'random';
+  let pattern: 'random' | 'clustered' | 'trailing' | 'leading' | 'all_null' | 'all_filled' =
+    'random';
   if (nullCount === 0) pattern = 'all_filled';
   else if (nullCount === total) pattern = 'all_null';
   else if (firstNullIdx === 0 && maxNullStreak === nullCount) pattern = 'leading';
@@ -596,5 +1034,3 @@ export function analyzeNullPatterns(data: any[], fieldName: string): {
     pattern,
   };
 }
-
-

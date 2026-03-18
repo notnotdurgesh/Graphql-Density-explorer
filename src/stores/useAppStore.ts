@@ -99,6 +99,11 @@ export interface QueryHistoryItem {
   durationMs: number;
 }
 
+export interface DensityRecord {
+  timestamp: number;
+  density: Record<string, Record<string, number>>;
+}
+
 interface FullSchema {
   enums: GraphQLEnumType[];
   interfaces: GraphQLInterfaceType[];
@@ -116,7 +121,7 @@ interface AppState {
   schemaStats: SchemaStats | null;
   selectedTypes: string[];
   densityData: Record<string, Record<string, number>>;
-  sampleData: Record<string, any[]>;
+  sampleData: Record<string, Record<string, unknown>[]>;
   status: 'idle' | 'connecting' | 'connected' | 'error' | 'fetching';
   error: string | null;
   theme: 'light' | 'dark' | 'system';
@@ -126,7 +131,8 @@ interface AppState {
   refreshInterval: number;
   connectionHealth: ConnectionHealth | null;
   queryHistory: QueryHistoryItem[];
-  
+  densityHistory: DensityRecord[];
+
   setEndpoint: (url: string) => void;
   setHeaders: (headers: Record<string, string>) => void;
   addSavedEndpoint: (endpoint: SavedEndpoint) => void;
@@ -136,7 +142,7 @@ interface AppState {
   setSchemaStats: (stats: SchemaStats) => void;
   setSelectedTypes: (types: string[]) => void;
   setDensityData: (data: Record<string, Record<string, number>>) => void;
-  setSampleData: (data: Record<string, any[]>) => void;
+  setSampleData: (data: Record<string, Record<string, unknown>[]>) => void;
   setStatus: (status: AppState['status']) => void;
   setError: (error: string | null) => void;
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
@@ -147,6 +153,8 @@ interface AppState {
   setConnectionHealth: (health: ConnectionHealth) => void;
   addQueryHistory: (item: QueryHistoryItem) => void;
   clearQueryHistory: () => void;
+  addDensityRecord: (record: DensityRecord) => void;
+  clearDensityHistory: () => void;
   reset: () => void;
 }
 
@@ -179,6 +187,7 @@ export const useAppStore = create<AppState>()(
       refreshInterval: 30,
       connectionHealth: null,
       queryHistory: [],
+      densityHistory: [],
 
       setEndpoint: (url) => set({ endpoint: url }),
       setHeaders: (headers) => set({ headers }),
@@ -212,6 +221,11 @@ export const useAppStore = create<AppState>()(
           queryHistory: [item, ...state.queryHistory].slice(0, 20),
         })),
       clearQueryHistory: () => set({ queryHistory: [] }),
+      addDensityRecord: (record) =>
+        set((state) => ({
+          densityHistory: [record, ...state.densityHistory].slice(0, 50),
+        })),
+      clearDensityHistory: () => set({ densityHistory: [] }),
       reset: () =>
         set({
           schema: [],

@@ -1,5 +1,18 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Database, LayoutGrid, Settings, Zap, Moon, Sun, Monitor, Activity, ArrowRight, Info, Terminal, Wifi, WifiOff, ChevronRight } from 'lucide-react';
+import {
+  Database,
+  LayoutGrid,
+  Settings,
+  Zap,
+  Moon,
+  Sun,
+  Monitor,
+  Activity,
+  ArrowRight,
+  Info,
+  Terminal,
+  ChevronRight,
+} from 'lucide-react';
 import { Dashboard } from './pages/Dashboard';
 import { SchemaExplorer } from './pages/SchemaExplorer';
 import { HeatmapView } from './pages/HeatmapView';
@@ -8,11 +21,24 @@ import { Toaster } from './components/ui/toaster';
 import { useAppStore } from './stores/useAppStore';
 import { cn } from './lib/utils';
 import { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from './components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from './components/ui/dialog';
 import { Label } from './components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './components/ui/select';
 import { Button } from './components/ui/button';
-import { useToast } from './components/ui/use-toast';
 
 function Breadcrumbs() {
   const location = useLocation();
@@ -36,7 +62,6 @@ function Breadcrumbs() {
 function Navigation() {
   const location = useLocation();
   const store = useAppStore();
-  const { toast } = useToast();
   const status = store.status;
   const isConnected = status === 'connected' || status === 'fetching';
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -57,7 +82,9 @@ function Navigation() {
           D
         </div>
         <div>
-          <span className="font-bold text-base tracking-tight block leading-none">Data Density</span>
+          <span className="font-bold text-base tracking-tight block leading-none">
+            Data Density
+          </span>
           <span className="text-[10px] text-zinc-400 font-medium">GraphQL Inspector</span>
         </div>
       </div>
@@ -70,7 +97,9 @@ function Navigation() {
             {store.endpoint ? new URL(store.endpoint).hostname : 'Disconnected'}
           </span>
           {store.connectionHealth && (
-            <span className="text-[9px] text-green-600 dark:text-green-500 ml-auto font-mono">{store.connectionHealth.latencyMs}ms</span>
+            <span className="text-[9px] text-green-600 dark:text-green-500 ml-auto font-mono">
+              {store.connectionHealth.latencyMs}ms
+            </span>
           )}
         </div>
       )}
@@ -79,10 +108,13 @@ function Navigation() {
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = location.pathname === item.path;
-        
+
         if (item.disabled) {
           return (
-            <div key={item.path} className="flex items-center gap-2.5 px-3 py-2 rounded-md text-zinc-400 dark:text-zinc-600 cursor-not-allowed text-sm">
+            <div
+              key={item.path}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-md text-zinc-400 dark:text-zinc-600 cursor-not-allowed text-sm"
+            >
               <Icon size={16} />
               <span className="font-medium">{item.label}</span>
             </div>
@@ -94,10 +126,10 @@ function Navigation() {
             key={item.path}
             to={item.path}
             className={cn(
-              "flex items-center gap-2.5 px-3 py-2 rounded-md transition-all text-sm",
-              isActive 
-                ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-semibold shadow-sm" 
-                : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-zinc-50"
+              'flex items-center gap-2.5 px-3 py-2 rounded-md transition-all text-sm',
+              isActive
+                ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-semibold shadow-sm'
+                : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-zinc-50'
             )}
           >
             <Icon size={16} />
@@ -118,12 +150,19 @@ function Navigation() {
           <DialogContent className="sm:max-w-[550px]">
             <DialogHeader>
               <DialogTitle>Data Density — GraphQL Inspection Suite</DialogTitle>
-              <DialogDescription>Professional data quality analysis for GraphQL APIs</DialogDescription>
+              <DialogDescription>
+                Professional data quality analysis for GraphQL APIs
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-3 py-4 text-sm text-zinc-700 dark:text-zinc-300">
-              <p>A web-based visualization tool that represents the completeness and distribution of data across an entire GraphQL dataset.</p>
+              <p>
+                A web-based visualization tool that represents the completeness and distribution of
+                data across an entire GraphQL dataset.
+              </p>
               <ul className="list-disc pl-5 space-y-1 text-xs">
-                <li>Deep schema introspection (objects, enums, interfaces, unions, inputs, directives)</li>
+                <li>
+                  Deep schema introspection (objects, enums, interfaces, unions, inputs, directives)
+                </li>
                 <li>Interactive D3.js heatmap with zoom, pan, and drill-down</li>
                 <li>Null pattern analysis and anomaly detection</li>
                 <li>Live query playground with auto-generation and history</li>
@@ -150,20 +189,38 @@ function Navigation() {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>Theme</Label>
-                <Select value={store.theme} onValueChange={(v: any) => store.setTheme(v)}>
+                <Select
+                  value={store.theme}
+                  onValueChange={(v: 'light' | 'dark' | 'system') => store.setTheme(v)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select theme" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="light"><div className="flex items-center gap-2"><Sun className="w-4 h-4"/> Light</div></SelectItem>
-                    <SelectItem value="dark"><div className="flex items-center gap-2"><Moon className="w-4 h-4"/> Dark</div></SelectItem>
-                    <SelectItem value="system"><div className="flex items-center gap-2"><Monitor className="w-4 h-4"/> System</div></SelectItem>
+                    <SelectItem value="light">
+                      <div className="flex items-center gap-2">
+                        <Sun className="w-4 h-4" /> Light
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="dark">
+                      <div className="flex items-center gap-2">
+                        <Moon className="w-4 h-4" /> Dark
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="system">
+                      <div className="flex items-center gap-2">
+                        <Monitor className="w-4 h-4" /> System
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>Default Sample Size</Label>
-                <Select value={store.sampleSize.toString()} onValueChange={(v: any) => store.setSampleSize(parseInt(v, 10))}>
+                <Select
+                  value={store.sampleSize.toString()}
+                  onValueChange={(v: string) => store.setSampleSize(parseInt(v, 10))}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select sample size" />
                   </SelectTrigger>
@@ -175,11 +232,16 @@ function Navigation() {
                     <SelectItem value="1000">1000 items</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-zinc-500">Records to fetch per type for density calculation.</p>
+                <p className="text-xs text-zinc-500">
+                  Records to fetch per type for density calculation.
+                </p>
               </div>
               <div className="space-y-2">
                 <Label>Auto-Refresh Interval</Label>
-                <Select value={store.refreshInterval.toString()} onValueChange={(v: any) => store.setRefreshInterval(parseInt(v, 10))}>
+                <Select
+                  value={store.refreshInterval.toString()}
+                  onValueChange={(v: string) => store.setRefreshInterval(parseInt(v, 10))}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select interval" />
                   </SelectTrigger>
@@ -196,33 +258,54 @@ function Navigation() {
                 <div className="flex items-center gap-4">
                   <div className="flex flex-col gap-1">
                     <Label className="text-xs text-zinc-500">Low (0%)</Label>
-                    <input type="color" value={store.heatmapColors.low} 
-                      onChange={(e) => store.setHeatmapColors({ ...store.heatmapColors, low: e.target.value })}
-                      className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
+                    <input
+                      type="color"
+                      value={store.heatmapColors.low}
+                      onChange={(e) =>
+                        store.setHeatmapColors({ ...store.heatmapColors, low: e.target.value })
+                      }
+                      className="w-8 h-8 rounded cursor-pointer border-0 p-0"
+                    />
                   </div>
                   <div className="flex flex-col gap-1">
                     <Label className="text-xs text-zinc-500">Medium (50%)</Label>
-                    <input type="color" value={store.heatmapColors.medium} 
-                      onChange={(e) => store.setHeatmapColors({ ...store.heatmapColors, medium: e.target.value })}
-                      className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
+                    <input
+                      type="color"
+                      value={store.heatmapColors.medium}
+                      onChange={(e) =>
+                        store.setHeatmapColors({ ...store.heatmapColors, medium: e.target.value })
+                      }
+                      className="w-8 h-8 rounded cursor-pointer border-0 p-0"
+                    />
                   </div>
                   <div className="flex flex-col gap-1">
                     <Label className="text-xs text-zinc-500">High (100%)</Label>
-                    <input type="color" value={store.heatmapColors.high} 
-                      onChange={(e) => store.setHeatmapColors({ ...store.heatmapColors, high: e.target.value })}
-                      className="w-8 h-8 rounded cursor-pointer border-0 p-0" />
+                    <input
+                      type="color"
+                      value={store.heatmapColors.high}
+                      onChange={(e) =>
+                        store.setHeatmapColors({ ...store.heatmapColors, high: e.target.value })
+                      }
+                      className="w-8 h-8 rounded cursor-pointer border-0 p-0"
+                    />
                   </div>
                 </div>
               </div>
               <div className="space-y-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-                <Button variant="destructive" className="w-full" onClick={() => {
-                  store.reset();
-                  setIsSettingsOpen(false);
-                  window.location.href = '/';
-                }}>
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  onClick={() => {
+                    store.reset();
+                    setIsSettingsOpen(false);
+                    window.location.href = '/';
+                  }}
+                >
                   Clear Workspace
                 </Button>
-                <p className="text-xs text-zinc-500 text-center">This will remove all fetched data and reset the app state.</p>
+                <p className="text-xs text-zinc-500 text-center">
+                  This will remove all fetched data and reset the app state.
+                </p>
               </div>
             </div>
           </DialogContent>
@@ -233,14 +316,16 @@ function Navigation() {
 }
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const theme = useAppStore(state => state.theme);
-  
+  const theme = useAppStore((state) => state.theme);
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-    
+
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
       root.classList.add(systemTheme);
     } else {
       root.classList.add(theme);
@@ -257,9 +342,12 @@ function Onboarding() {
   if (store.hasSeenOnboarding) return null;
 
   return (
-    <Dialog open={!store.hasSeenOnboarding} onOpenChange={(open) => {
-      if (!open) store.setHasSeenOnboarding(true);
-    }}>
+    <Dialog
+      open={!store.hasSeenOnboarding}
+      onOpenChange={(open) => {
+        if (!open) store.setHasSeenOnboarding(true);
+      }}
+    >
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Welcome to Data Density</DialogTitle>
@@ -267,7 +355,7 @@ function Onboarding() {
             Your professional GraphQL data inspection suite. Let's get started.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="py-6">
           {step === 1 && (
             <div className="space-y-4 animate-fade-in-up">
@@ -276,7 +364,8 @@ function Onboarding() {
               </div>
               <h3 className="text-lg font-semibold">1. Connect to Endpoint</h3>
               <p className="text-zinc-500">
-                Enter your GraphQL endpoint URL and headers. We'll deep-introspect the schema — fetching all types, enums, interfaces, unions, and directives.
+                Enter your GraphQL endpoint URL and headers. We'll deep-introspect the schema —
+                fetching all types, enums, interfaces, unions, and directives.
               </p>
             </div>
           )}
@@ -287,7 +376,8 @@ function Onboarding() {
               </div>
               <h3 className="text-lg font-semibold">2. Explore & Analyze</h3>
               <p className="text-zinc-500">
-                Browse fields with type badges, expand type details, and select which types to analyze. Then calculate density to see data completeness at a glance.
+                Browse fields with type badges, expand type details, and select which types to
+                analyze. Then calculate density to see data completeness at a glance.
               </p>
             </div>
           )}
@@ -298,7 +388,8 @@ function Onboarding() {
               </div>
               <h3 className="text-lg font-semibold">3. Inspect & Visualize</h3>
               <p className="text-zinc-500">
-                Explore the interactive heatmap. Click any cell to drill into sample data, distributions, null pattern analysis, and raw JSON. Export as CSV, PNG, PDF, or SVG.
+                Explore the interactive heatmap. Click any cell to drill into sample data,
+                distributions, null pattern analysis, and raw JSON. Export as CSV, PNG, PDF, or SVG.
               </p>
             </div>
           )}
@@ -306,17 +397,29 @@ function Onboarding() {
 
         <DialogFooter className="flex items-center justify-between sm:justify-between">
           <div className="flex gap-1">
-            {[1, 2, 3].map(s => (
-              <div key={s} className={cn("w-2 h-2 rounded-full transition-colors", s === step ? "bg-indigo-600" : "bg-zinc-200 dark:bg-zinc-800")} />
+            {[1, 2, 3].map((s) => (
+              <div
+                key={s}
+                className={cn(
+                  'w-2 h-2 rounded-full transition-colors',
+                  s === step ? 'bg-indigo-600' : 'bg-zinc-200 dark:bg-zinc-800'
+                )}
+              />
             ))}
           </div>
           <div className="flex gap-2">
             {step < 3 ? (
-              <Button onClick={() => setStep(step + 1)} className="bg-indigo-600 hover:bg-indigo-700">
+              <Button
+                onClick={() => setStep(step + 1)}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
                 Next <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
-              <Button onClick={() => store.setHasSeenOnboarding(true)} className="bg-indigo-600 hover:bg-indigo-700">
+              <Button
+                onClick={() => store.setHasSeenOnboarding(true)}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
                 Get Started
               </Button>
             )}

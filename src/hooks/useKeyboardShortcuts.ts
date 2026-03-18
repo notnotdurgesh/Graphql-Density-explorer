@@ -1,6 +1,15 @@
 import { useEffect } from 'react';
 
-export function useKeyboardShortcuts(shortcuts: { key: string; ctrlKey?: boolean; metaKey?: boolean; shiftKey?: boolean; altKey?: boolean; action: (e: KeyboardEvent) => void }[]) {
+export function useKeyboardShortcuts(
+  shortcuts: {
+    key: string;
+    ctrlKey?: boolean;
+    metaKey?: boolean;
+    shiftKey?: boolean;
+    altKey?: boolean;
+    action: (e: KeyboardEvent) => void;
+  }[]
+) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       for (const shortcut of shortcuts) {
