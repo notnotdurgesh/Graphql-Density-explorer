@@ -2,6 +2,7 @@
 
 ![Data Density Heatmap](https://img.shields.io/badge/Status-Active-success) ![React](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue) ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Styled-38B2AC) ![D3.js](https://img.shields.io/badge/D3.js-Visualized-F9A03C)
 
+Check it out on --> [Density Heat Map](https://densityheatmap.netlify.app/)
 ## 📖 Overview
 
 **Data Density Heatmap** is a powerful, web-based visualization tool designed to analyze and represent the completeness and distribution of data across an entire GraphQL dataset.
